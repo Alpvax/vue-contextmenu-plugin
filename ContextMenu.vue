@@ -1,5 +1,5 @@
 <template>
-  <div class="context-menu" v-bind:id="getmenuid" v-show="show" ref="menu" :style="style">
+  <div class="context-menu" v-bind:id="getmenuid" v-show="show" ref="menu" :style="style" @click.stop="(e)=>e.stopPropagation()">
     <div v-for="(item, i) in items" :key="i">
       <div @click.stop="handleAction(item)" class="context-item">
         {{item.text}}
@@ -18,7 +18,6 @@ export default {
   },
   methods: {
     handleAction(item) {
-      console.log("Executing:", item)
       if (item.isParent) {
         item.action();
       } else {
@@ -28,12 +27,9 @@ export default {
     }
   },
   computed: {
-    /*items() {
-      return this.$root.items
+    zlevel() {
+      return this.parent ? this.parent.zlevel : 1;
     },
-    pos() {
-      return this.$root.pos
-    },*/
     getmenuid() {
       return "context-menu" + this.menuid;
     },
@@ -41,7 +37,6 @@ export default {
       return this.items.length > 0;
     },
     style() {
-      console.debug(this.menuid)
       const { offsetWidth, offsetHeight } = document.getElementById(
         "context-menu" + this.menuid
       ) || { offsetWidth: 0, offsetHeight: 0 };
@@ -54,7 +49,8 @@ export default {
         top:
           posY + offsetHeight < window.innerHeight
             ? `${posY}px`
-            : `${posY - offsetHeight}px`
+            : `${posY - offsetHeight}px`,
+        "z-index": this.zlevel
       };
     }
   }
@@ -69,7 +65,6 @@ export default {
   /*color: var(--text-blur);
   background: var(--ui-border);*/
   padding: 10px 0px;
-  z-index: 1;
   border-radius: 4px;
   box-shadow: 0px 2px 15px 0px #232323;
 }
