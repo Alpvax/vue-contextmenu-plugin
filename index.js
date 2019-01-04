@@ -1,19 +1,21 @@
 import ContextMenu from "./ContextMenu";
 
-const defaultOptions = {
+const options = {
   defaultFuncName: "contextMenuItems"
 };
 
 export default {
   install(Vue, opts) {
     // Merge options argument into options defaults
-    const options = {...defaultOptions, ...opts };
+    Object.assign(options, opts);
+
+    function hideContextMenu() {
+      root.$data.items = [];
+    }
 
     Vue.mixin({
       methods: {
-        hideContextMenu() {
-          root.$data.items = [];
-        }
+        hideContextMenu
       }
     });
     Vue.directive("contextmenu", {
@@ -28,7 +30,7 @@ export default {
             }
           }
         } else {
-          build = (vm, args) => vm[options.defaultFuncName](vm, args)
+          build = (vm, args) => vm[options.defaultFuncName](vm, args);
         }
         let bubble = !binding.modifiers.stop;
         el.addEventListener("contextmenu", showMenuHandler(vnode, build, bubble), false);
@@ -53,6 +55,7 @@ export default {
 
     // Mount root Vue instance on new div element added to body
     root.$mount(document.body.appendChild(document.createElement("div")));
+    document.addEventListener("click", hideContextMenu, false);
 
     let contextEvent;
     function showMenuHandler(vnode, buildFunc, bubble) {
@@ -61,11 +64,11 @@ export default {
           contextEvent = event;
           root.$data.pos = { x: event.x, y: event.y };
           root.$data.items = [];
-          console.log(root.$data)
+          //console.log(root.$data);
         }
-        event.preventDefault()
+        event.preventDefault();
         if (!bubble) {
-          event.stopPropagation()
+          event.stopPropagation();
         }
         let items = buildFunc(vnode.context, {event, menuitems: root.$data.items});
         root.$data.items.push(...items);
