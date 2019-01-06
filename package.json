@@ -1,6 +1,6 @@
 {
   "name": "vue-contextmenu-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A styleable contextmenu plugin for Vue 2.x",
   "main": "./dist/vue-contextmenu-plugin.umd.min.js",
   "scripts": {
