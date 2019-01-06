@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["vue-contextmenu"] = factory();
+		exports["vue-contextmenu-plugin"] = factory();
 	else
-		root["vue-contextmenu"] = factory();
+		root["vue-contextmenu-plugin"] = factory();
 })((typeof self !== 'undefined' ? self : this), function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -781,4 +781,4 @@ const options = {
 
 /******/ });
 });
-//# sourceMappingURL=vue-contextmenu.umd.js.map
+//# sourceMappingURL=vue-contextmenu-plugin.umd.js.map
