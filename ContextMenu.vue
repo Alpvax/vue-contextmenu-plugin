@@ -1,9 +1,7 @@
 <template>
-  <div class="context-menu" v-bind:id="getmenuid" v-show="show" ref="menu" :style="style" @click.stop="(e)=>e.stopPropagation()">
-    <div v-for="(item, i) in items" :key="i">
-      <div @click.stop="handleAction(item)" class="context-item">
-        {{item.text}}
-      </div>
+  <div :class="classbindings" :id="menuid" v-show="show" ref="menu" :style="style" @click.stop="(e)=>e.stopPropagation()">
+    <div v-for="(item, i) in items" :key="i" @click.stop="handleAction(item)" class="context-item">
+      {{item.text}}
     </div>
   </div>
 </template>
@@ -13,8 +11,9 @@ export default {
   props: {
     "items": {type: Array, required: true},
     "pos": {type: Object, required: true},
-    "menuid": {default: ""},
-    "parent": {type: Object, required: false}
+    "menuid": {type: String, required: true},
+    "parent": {type: Object, required: false},
+    "customclass": {type: String, required: false}
   },
   methods: {
     handleAction(item) {
@@ -30,8 +29,8 @@ export default {
     zlevel() {
       return this.parent ? this.parent.zlevel : 1;
     },
-    getmenuid() {
-      return "context-menu" + this.menuid;
+    classbindings() {
+      return [this.$root.options.elementClass, this.customclass];
     },
     show() {
       return this.items.length > 0;
@@ -50,32 +49,36 @@ export default {
           posY + offsetHeight < window.innerHeight
             ? `${posY}px`
             : `${posY - offsetHeight}px`,
-        "z-index": this.zlevel
+        "z-index": this.zlevel,
+        position: "absolute"
       };
     }
   }
 };
 </script>
 
-<style>
-.context-menu {
+<style scoped>
+/*.context-menu {
   position: absolute;
-  max-width: 160px;
-  max-height: 90vh;
   /*color: var(--text-blur);
   background: var(--ui-border);*/
+div {
+  max-width: 160px;
+  max-height: 90vh;
   padding: 10px 0px;
   border-radius: 4px;
   box-shadow: 0px 2px 15px 0px #232323;
 }
 
-.context-item {
+/*.context-item {*/
+div div {
   padding: 10px;
   margin: 0;
   cursor: pointer;
 }
 
-.context-item:hover {
+/*.context-item:*/
+div div:hover {
   background: var(--ui-dark);
 }
 </style>

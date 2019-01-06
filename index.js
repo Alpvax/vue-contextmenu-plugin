@@ -1,7 +1,9 @@
 import ContextMenu from "./ContextMenu";
 
 const options = {
-  defaultFuncName: "contextMenuItems"
+  defaultFuncName: "contextMenuItems",
+  elementId: "contextmenu",
+  elementClass: "contextmenu"
 };
 
 export default {
@@ -29,7 +31,7 @@ export default {
       let modifiers = Object.freeze(Object.assign({}, binding.modifiers, {
         prevent: !binding.modifiers.noprevent
       }));
-      let listener = showMenuHandler(vnode, build, modifiers);
+      let listener = showMenuHandler(vnode, build, modifiers, binding.arg);
       listener.opts = Object.freeze({
         capture: !!binding.modifiers.capture,
         once: !!binding.modifiers.once
@@ -69,21 +71,26 @@ export default {
         pos: {
           x: 0,
           y: 0
-        }
+        },
+        customclass: ""
       },
       components: {ContextMenu},
       template: `<ContextMenu
         :items="items"
         :pos="pos"
+        :menuid="'${options.elementId}'"
+        :customclass="customclass"
       />`
     });
+
+    root.options = options;
 
     // Mount root Vue instance on new div element added to body
     root.$mount(document.body.appendChild(document.createElement("div")));
     document.addEventListener("click", hideContextMenu, false);
 
     let contextEvent;
-    function showMenuHandler(vnode, buildFunc, modifiers) {
+    function showMenuHandler(vnode, buildFunc, modifiers, customclass) {
       return function(event) {
         if (modifiers.self && event.target !== event.currentTarget){
           return;
@@ -92,6 +99,7 @@ export default {
           contextEvent = event;
           root.$data.pos = { x: event.x, y: event.y };
           root.$data.items = [];
+          root.$data.customclass = customclass || "";
           //console.log(root.$data);
         }
         if (modifiers.prevent) {
