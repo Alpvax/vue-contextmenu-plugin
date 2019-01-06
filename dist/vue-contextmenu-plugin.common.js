@@ -771,4 +771,4 @@ const options = {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=vue-contextmenu.common.js.map
+//# sourceMappingURL=vue-contextmenu-plugin.common.js.map
