@@ -1,15 +1,15 @@
 {
-  "name": "vue-contextmenu",
+  "name": "vue-contextmenu-plugin",
   "version": "1.0.0",
   "description": "A styleable contextmenu plugin for Vue 2.x",
-  "main": "./dist/vue-contextmenu.umd.min.js",
+  "main": "./dist/vue-contextmenu-plugin.umd.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "vue-cli-service build --target lib --name vue-contextmenu ./index.js"
+    "build": "vue-cli-service build --target lib --name vue-contextmenu-plugin ./index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Alpvax/vue-contextmenu.git"
+    "url": "git+https://github.com/Alpvax/vue-contextmenu-plugin.git"
   },
   "keywords": [
     "vue",
@@ -18,9 +18,9 @@
   "author": "Alpvax <development@alpvax.uk>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Alpvax/vue-contextmenu/issues"
+    "url": "https://github.com/Alpvax/vue-contextmenu-plugin/issues"
   },
-  "homepage": "https://github.com/Alpvax/vue-contextmenu#readme",
+  "homepage": "https://github.com/Alpvax/vue-contextmenu-plugin#readme",
   "devDependencies": {
     "@vue/cli-service": "^3.2.3",
     "vue-template-compiler": "^2.5.21"
