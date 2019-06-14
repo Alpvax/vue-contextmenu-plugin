@@ -10,7 +10,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import typescript from "typescript";
-import * as CMType from "../../lib/types";
+import * as CMType from "../../lib/ContextMenu";
 
 export default Vue.extend({
   name: "MenuBuilder",
