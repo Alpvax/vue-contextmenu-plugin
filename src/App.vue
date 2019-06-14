@@ -1,18 +1,35 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <menu-builder :value="tsdefault"/>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import MenuBuilder from "./components/MenuBuilder.vue";
 
 export default Vue.extend({
   name: 'app',
   components: {
-    HelloWorld
+    MenuBuilder
+  },
+  data() {
+    return {
+      tsdefault:
+`[
+  {
+    "text": "What is this?",
+    "action": () => console.log("Something"),
+  },
+  {
+    text: "A submenu",
+    submenu: {
+      test1: () => console.log("Test 1 action"),
+      test2: () => console.log("Test 2 action"),
+    }
+  },
+]
+`}
   }
 });
 </script>

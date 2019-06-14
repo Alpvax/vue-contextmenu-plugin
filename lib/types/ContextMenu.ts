@@ -1,8 +1,8 @@
-import { IContextMenuItem, parse as parseItem, ContextMenuItemDeclarationValue } from "./ContextMenuItem";
+import { IContextMenuItem, parseItem, ContextMenuItemDeclarationValue } from "./internal";
 
 type ContextMenuItemsObjDeclaration = Omit<{
   [text: string]: ContextMenuItemDeclarationValue;
-}, keyof (IContextMenuDeclaration | IContextMenuItem)>;
+}, "items" | "style" | "text" | "action" | "submenu">;//keyof (IContextMenuDeclaration | IContextMenuItem)>;
 
 type ContextMenuItemsDeclaration = ContextMenuItemsObjDeclaration | IContextMenuItem[];
 export type CustomStyleDeclaration = string | ((el: HTMLDivElement) => string | void)
@@ -12,7 +12,7 @@ interface IContextMenuDeclaration {
   style?: CustomStyleDeclaration;
 }
 
-export type ContextMenuDeclaration = IContextMenuDeclaration | ContextMenuItemsDeclaration;
+export type ContextMenuDeclaration = ContextMenuItemsDeclaration | IContextMenuDeclaration;
 
 export interface IContextMenu {
   items: IContextMenuItem[];

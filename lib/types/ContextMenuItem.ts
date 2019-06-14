@@ -1,4 +1,4 @@
-import { IContextMenu, ContextMenuDeclaration, CustomStyleDeclaration, parse as parseMenu } from "./ContextMenu";
+import { IContextMenu, ContextMenuDeclaration, CustomStyleDeclaration, parseMenu } from "./internal";
 
 export interface IContextMenuItemAction {
   (): void;
@@ -26,7 +26,7 @@ export interface IContextMenuItem {
   text: string;
 }
 
-export type ContextMenuItemDeclarationValue = IContextMenuItem | Omit<IContextMenuItem, "text"> | IContextMenuItemAction | ContextMenuDeclaration;
+export type ContextMenuItemDeclarationValue = Partial<IContextMenuItem> | IContextMenuItemAction | ContextMenuDeclaration;
 
 function isAction(dec: ContextMenuItemDeclarationValue): dec is IContextMenuItemAction {
   return typeof dec === "function";
