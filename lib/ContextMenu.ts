@@ -52,17 +52,21 @@ function parseItems(declaration: ContextMenuDeclarationTypes.IContextMenuItemArr
 }
 
 export function parseMenu(declaration: ContextMenuDeclaration): IContextMenu {
+  let menu: Omit<IContextMenu, "Symbol.iterator">;
   if (isOptionsDeclaration(declaration)) {
-    return {
+    menu = {
       options: declaration.options,
       items: parseItems(declaration.items),
     };
   } else {
-    return {
+    menu = {
       options: {},
       items: parseItems(declaration),
     };
   }
+  return Object.assign(menu, {
+    [Symbol.iterator]: function*() { yield* menu.items; }
+  })
 }
 
 type ActionType = () => void;
@@ -79,7 +83,7 @@ export interface IContextMenuItem {
     style?: StyleType;
 }
 
-export interface IContextMenu {
+export interface IContextMenu extends Iterable<IContextMenuItem> {
   items: IContextMenuItem[];
   options: IContextMenuOptions;
 }
