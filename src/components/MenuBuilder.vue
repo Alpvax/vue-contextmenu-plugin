@@ -1,8 +1,8 @@
 <template>
   <div>
-    <textarea id="tsinput" :value="value" @change="parseTs">
+    <textarea ref="tsinput" :value="value" @change="parseTs">
     </textarea>
-    <textarea id="jsout" :value="jsval">
+    <textarea ref="jsout" :value="jsval">
     </textarea>
   </div>
 </template>
@@ -24,10 +24,17 @@ export default Vue.extend({
   },
   methods: {
     parseTs(event: Event) {
-      let js = typescript.transpile("(" + (event.target as HTMLTextAreaElement).value + ")");
-      this.jsval = JSON.stringify(CMType.parseMenu(eval(js)));
+      let ts = (event.target as HTMLTextAreaElement).value;
+      let js = typescript.transpile("(" + ts + ")");
+      let rawObj = eval(js);
+      let menu = CMType.parseMenu(rawObj);
+      this.$emit("menu-changed", ts, { js, rawObj, menu });
+      this.jsval = JSON.stringify(menu, (name, value) => name === "action" ? value.toString() : value, 2);
     }
   },
+  mounted() {
+    (this.$refs.tsinput as Element).dispatchEvent(new Event("change"));
+  }
 });
 </script>
 
