@@ -69,6 +69,12 @@ export function parseMenu(declaration: ContextMenuDeclaration): IContextMenu {
   })
 }
 
+export const EMPTY: IContextMenu = {
+  options: {},
+  items: [],
+  [Symbol.iterator]: function*() { yield* this.items; }
+};
+
 type ActionType = () => void;
 type StyleType = CSSStyleDeclaration;
 

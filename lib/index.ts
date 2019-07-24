@@ -33,8 +33,8 @@ type ContextMenuEvent = WindowEventMap["contextmenu"];
 
 import { PluginFunction, VNode, default as VueType } from "vue";
 import { DirectiveBinding } from "vue/types/options";
-import { ContextMenuDeclaration, parseMenu, IContextMenu } from "./ContextMenu";
-import { ContextMenuComponent } from "./components";//components/ContextMenu.vue";
+import { ContextMenuDeclaration, parseMenu, IContextMenu, EMPTY } from "./ContextMenu";
+import { ContextMenuComponent, ContextMenuItemComponent } from "./components";//components/ContextMenu.vue";
 
 let defaultOpts: IContexMenuPluginOptions = {
   defaultFuncName: "contextMenuItems",
@@ -43,8 +43,11 @@ let defaultOpts: IContexMenuPluginOptions = {
 
 const bindings = new WeakMap<HTMLElement, ContextMenuListener>();
 
-let install: PluginFunction<Partial<IContexMenuPluginOptions>> = function install(Vue, opts) {
+export const install: PluginFunction<Partial<IContexMenuPluginOptions>> = function install(Vue, opts) {
   let options: IContexMenuPluginOptions = Object.assign({}, defaultOpts, opts);
+
+  Vue.component("context-menu-component", ContextMenuComponent);
+  Vue.component("context-menu-item-component", ContextMenuItemComponent);
 
   function bindEventListener(el: HTMLElement, binding: DirectiveBinding, vnode: VNode) {
     let build: ContexMenuBuildBinding;
@@ -85,13 +88,17 @@ let install: PluginFunction<Partial<IContexMenuPluginOptions>> = function instal
     }
   }
 
+  let currentEvent: ContextMenuEvent;
   function makeShowMenuHandler(vnode: VNode, build: ContexMenuBuildBinding, modifiers: IContextMenuBindingModifiers, listenerOpts: IContextMenuBindingOptions): ContextMenuListener {
     return Object.assign(function(event: ContextMenuEvent) {
       if (modifiers.self && event.target !== event.currentTarget){
         return;
       }
-      if (contextMenuRoot.$data.menu) {
+      if (event != currentEvent) {
+        currentEvent = event;
+        contextMenuRoot.$data.menu = EMPTY;
         contextMenuRoot.$data.pos = { x: event.x, y: event.y };
+        contextMenuRoot.$data.show = true;
       }
       if (modifiers.prevent) {
         event.preventDefault();
@@ -113,7 +120,11 @@ let install: PluginFunction<Partial<IContexMenuPluginOptions>> = function instal
       };
       let menu = build(vnode.context!, args);
       if(menu) {
-        (contextMenuRoot.$data.menu as IContextMenu).items.push(...menu.items);
+        if (contextMenuRoot.$data.menu == EMPTY) {
+          contextMenuRoot.$data.menu = menu;
+        } else {
+          (contextMenuRoot.$data.menu as IContextMenu).items.push(...menu.items);
+        }
       } else {
         console.warn("Context menu build function did not return a ContextMenu:", menu, "\nVNode:", vnode);
       }
@@ -123,21 +134,24 @@ let install: PluginFunction<Partial<IContexMenuPluginOptions>> = function instal
   const contextMenuRoot =
   new Vue({
     data: {
-      menu: null,
+      menu: EMPTY,
       pos: {
         x: 0,
         y: 0,
       },
       show: false,
     },
-    components: {
+    /*components: {
       ContextMenuComponent,
+    },*/
+    render(h) {
+      return h(ContextMenuComponent, { props: this.$data})
     },
-    template: `<ContextMenu
+    /*template: `<ContextMenu
       :menu="menu"
       :pos="pos"
       :show="show"
-    />`
+    />`*/
   });
   if (options.mountOnVue) {
     Vue.prototype.$contextMenuRoot = contextMenuRoot;
